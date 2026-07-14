@@ -2,7 +2,7 @@
 
 ![MedFlow](docs/images/medflow.png)
 
-MedFlow is a local-first consultation support system created by a six-student Software Engineering team at the University of Southern Denmark. It was designed for a potential local hospital or outpatient clinic in Sonderborg. The system records outpatient consultations, transcribes them locally, produces structured clinical draft material, and keeps the doctor in control of every approval.
+MedFlow is a local-first consultation support system created by a six-student Software Engineering team at the University of Southern Denmark. It was designed for a potential local hospital or outpatient clinic in Sønderborg. The system records outpatient consultations, transcribes them locally, produces structured clinical draft material, and keeps the doctor in control of every approval.
 
 Sensitive consultation data stays within the local deployment. AI output is advisory and editable; nothing is accepted as clinical content without explicit doctor approval.
 
