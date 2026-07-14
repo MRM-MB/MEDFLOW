@@ -70,3 +70,39 @@ To stop the local environment while preserving data:
 ```bash
 docker compose down
 ```
+## 👥 Contributors
+
+<table width="100%">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>GitHub Profile</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Luigi</b></td>
+      <td><a href="https://github.com/Lucol24">Lucol24</a></td>
+    </tr>
+    <tr>
+      <td><b>Aleksandra</b></td>
+      <td><a href="https://github.com/Kwiatek05">Kwiatek05</a></td>
+    </tr>
+    <tr>
+      <td><b>Gabriele</b></td>
+      <td><a href="https://github.com/Gabbo693">Gabbo693</a></td>
+    </tr>
+    <tr>
+      <td><b>Gabija</b></td>
+      <td><a href="https://github.com/GabijaSt">GabijaSt</a></td>
+    </tr>
+    <tr>
+      <td><b>Mats</b></td>
+      <td><a href="https://github.com/mqts241">mqts241</a></td>
+    </tr>
+    <tr>
+      <td><b>Manish</b></td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
