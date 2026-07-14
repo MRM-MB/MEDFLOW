@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block content %}
+{% if consultation %}
+<div class="page-head">
+  <div>
+    <h2 class="page-head__title">Consultation #{{ consultation.id }}</h2>
+    <p class="page-head__sub">
+      <a href="/consultations" style="color: var(--muted); text-decoration: none;">← Back to all consultations</a>
+    </p>
+  </div>
+  <span class="status-pill status-pill--{{ consultation.status|lower|replace(' ', '_') }}" style="font-size: .85rem; padding: .4rem 1rem;">
+    {{ consultation.status|replace('_', ' ') }}
+  </span>
+</div>
+
+{# ── Workflow steps ── #}
+<div class="workflow-steps">
+  {% set has_started = consultation.started_at %}
+  {% set has_saved = consultation.status|lower in ['saved', 'completed', 'approved'] %}
+  {% set is_done = consultation.status|lower in ['completed', 'approved'] %}
+  <span class="workflow-step {% if has_started %}workflow-step--done{% else %}workflow-step--active{% endif %}">1. Started</span>
+  <span class="workflow-arrow">→</span>
+  <span class="workflow-step {% if has_saved %}workflow-step--done{% elif has_started %}workflow-step--active{% endif %}">2. Transcribed</span>
+  <span class="workflow-arrow">→</span>
+  <span class="workflow-step {% if is_done %}workflow-step--done{% elif has_saved %}workflow-step--active{% endif %}">3. Reviewed &amp; Sent</span>
+</div>
+
+<div class="detail-grid">
+  {# ── Main info ── #}
+  <section class="info-card">
+    <h3>Patient Information</h3>
+    {% if patient %}
+    <div class="info-row">
+      <span class="info-row__label">Name</span>
+      <span class="info-row__value">{{ patient.first_name }} {{ patient.last_name }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-row__label">Patient ID</span>
+      <span class="info-row__value">#{{ patient.id }}</span>
+    </div>
+    {% if patient.dob %}
+    <div class="info-row">
+      <span class="info-row__label">Date of Birth</span>
+      <span class="info-row__value">{{ patient.dob.strftime('%d %b %Y') if patient.dob.strftime is defined else patient.dob }}</span>
+    </div>
+    {% endif %}
+    {% if patient.gender %}
+    <div class="info-row">
+      <span class="info-row__label">Gender</span>
+      <span class="info-row__value">{{ patient.gender|capitalize }}</span>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="info-row">
+      <span class="info-row__label">Patient</span>
+      <span class="info-row__value">#{{ consultation.patient_id }}</span>
+    </div>
+    {% endif %}
+
+    <h3 style="margin-top: 1.5rem;">Encounter Details</h3>
+    <div class="info-row">
+      <span class="info-row__label">Chief Complaint</span>
+      <span class="info-row__value">{{ consultation.chief_complaint or "—" }}</span>
+    </div>
+    {% if consultation.started_at %}
+    <div class="info-row">
+      <span class="info-row__label">Started</span>
+      <span class="info-row__value">{{ consultation.started_at.strftime('%d %b %Y · %H:%M') }}</span>
+    </div>
+    {% endif %}
+    {% if consultation.ended_at %}
+    <div class="info-row">
+      <span class="info-row__label">Ended</span>
+      <span class="info-row__value">{{ consultation.ended_at.strftime('%d %b %Y · %H:%M') }}</span>
+    </div>
+    {% endif %}
+  </section>
+
+  {# ── Action panel ── #}
+  <aside class="info-card">
+    <h3>Next Steps</h3>
+    <div class="action-stack">
+      <a href="/review/{{ consultation.id }}" class="btn-cta">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+        Open Review Workflow
+      </a>
+      <a href="/review/report/{{ consultation.id }}" class="btn-cta btn-cta--ghost">
+        View Clinical Report
+      </a>
+      <a href="/review/{{ consultation.id }}/pdf" class="btn-cta btn-cta--ghost">
+        ↓ Download PDF
+      </a>
+      {% if patient %}
+      <a href="/patients/{{ patient.id }}" class="btn-cta btn-cta--ghost">
+        View Patient Chart
+      </a>
+      {% endif %}
+    </div>
+  </aside>
+</div>
+
+{% if user and user.role == 'doctor' %}
+<section class="card" style="margin-top: 1.5rem;">
+  <div style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; flex-wrap:wrap; margin-bottom:1rem;">
+    <div>
+      <h3 style="margin:0 0 .35rem 0;">Transcript Capture</h3>
+      <p style="margin:0; color: var(--muted);">
+        Record the consultation live or paste a demo transcript, then save it before opening the review workflow.
+      </p>
+    </div>
+    <a href="/review/{{ consultation.id }}" class="btn-cta btn-cta--ghost">Open Review</a>
+  </div>
+
+  <div id="transcription-ui" data-consultation-id="{{ consultation.id }}">
+    <div class="trx-card">
+      <div class="trx-header">
+        <div class="trx-header__title">
+          <span class="trx-mic-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="23"/>
+              <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+          </span>
+          <div>
+            <h3 class="trx-title">Live Transcription</h3>
+            <p class="trx-sub">Capture or paste the consultation transcript</p>
+          </div>
+        </div>
+        <span class="trx-status" id="trx-status">
+          <span class="trx-dot"></span>
+          <span class="trx-status__text">Ready</span>
+        </span>
+      </div>
+
+      <div class="trx-actions">
+        <button id="start-transcription" class="btn-cta">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
+          Start Recording
+        </button>
+        <button id="stop-transcription" class="btn-cta btn-cta--ghost" disabled>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+          Stop
+        </button>
+        <button id="save-transcription" class="btn-cta btn-cta--success" style="margin-left:auto;">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Save Transcript &amp; Open Review
+        </button>
+      </div>
+
+      <textarea id="transcript-display" rows="12" class="trx-textarea"
+        placeholder="Click Start Recording or paste the transcript here, then save it."></textarea>
+
+      <span id="partial-text" style="display:none;"></span>
+      <ul id="transcription-chunks" style="display:none;"></ul>
+
+      <div id="transcription-error" class="trx-msg trx-msg--err"></div>
+      <div id="transcription-saved" class="trx-msg trx-msg--ok"></div>
+
+      <p class="trx-manual-hint">
+        If you are demoing the flow, you can paste the transcript directly here and save it without using the microphone.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+window.__CONSULTATION_CONTEXT__ = { consultationId: {{ consultation.id }} };
+</script>
+<script src="/static/js/consultation_create.js"></script>
+{% endif %}
+{% else %}
+<section class="card">
+  <div class="empty-state">
+    <div class="empty-state__icon">⚠️</div>
+    <p class="empty-state__title">Consultation not found</p>
+    <p>This consultation may have been deleted or you do not have access.</p>
+    <a href="/consultations" class="btn-cta" style="margin-top: 1rem;">← Back to consultations</a>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,49 @@
+.venv/
+.venv312/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+*.pyc
+*.pyo
+*.pyd
+.env
+coverage.xml
+pytest-cache-files-*/
+alembic/versions/__pycache__/
+app/infrastructure/db/sql/migrations/.keep
+app/infrastructure/db/sql/seeds/.keep
+app/infrastructure/db/mongo/seeds/.keep
+app/infrastructure/models/
+app/static/img/.keep
+app/prompts/.keep
+app/email_templates/.keep
+app/models/whisper
+
+# Local cookie jar (curl/test session)
+cookies.txt
+
+# Temporary PDF preview renders
+_pg*.png
+_chk*.png
+
+# PlantUML toolchain (download locally; do not commit the JAR)
+Componenetclass-week17_assignment/tools/
+
+# Raw pytest run captures (regenerable)
+Componenetclass-week17_assignment/runs/
+
+# Generated reports (regenerable from scripts/generate_*.py and pytest)
+reports/section7_validation.pdf
+reports/section7_charts/
+reports/test_report.pdf
+reports/test_report.json
+reports/benchmark_report.html
+reports/benchmark_results.json
+reports/benchmark_chart_*.svg
+scripts/generate_section7_validation_pdf.py

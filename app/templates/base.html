@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page_title or "MedFlow" }}</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="/static/css/profile.css">
+</head>
+<body>
+  {% block body %}
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a href="/dashboard" class="brand-link">
+        <span class="brand-mark">
+          <svg viewBox="0 0 64 64"><polyline points="8,34 20,34 25,20 32,46 39,28 44,34 56,34" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="brand-text">MedFlow</span>
+      </a>
+      <nav>
+        <a href="/dashboard">Dashboard</a>
+
+        {% if user is defined and user %}
+          {% if user.role == 'doctor' %}
+            <a href="/patients">Patients</a>
+            <a href="/consultations">Consultations</a>
+            <a href="/appointments">Appointments</a>
+            <a href="/prescriptions">Prescriptions</a>
+            <a href="/profile">Profile</a>
+          {% elif user.role == 'admin' %}
+            <a href="/patients">Patients</a>
+            <a href="/consultations">Consultations</a>
+            <a href="/appointments">Appointments</a>
+            <a href="/profile">Profile</a>
+            <a href="/admin/config">Admin</a>
+          {% elif user.role == 'patient' %}
+            <a href="/appointments">My Appointments</a>
+            <a href="/prescriptions">My Prescriptions</a>
+            <a href="/profile">Profile</a>
+          {% else %}
+            <a href="/profile">Profile</a>
+          {% endif %}
+        {% endif %}
+
+        {% if user is defined and user %}
+          <a href="/logout" class="btn-logout">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Logout
+          </a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  <main class="layout">
+    {% block content %}{% endblock %}
+  </main>
+  {% endblock %}
+</body>
+</html>
