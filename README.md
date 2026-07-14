@@ -33,7 +33,7 @@ The first build downloads the Faster-Whisper `large-v3` model. The Ollama comman
 
 The Docker stack starts six services: `app`, `whisper`, `mysql`, `mongodb`, `ollama`, and `mailhog`.
 
-### Demo Access
+### 🔑 Demo Access
 
 All demo accounts use the password `password`.
 
