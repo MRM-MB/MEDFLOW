@@ -1,4 +1,4 @@
-# MedFlow
+# MedFlow 🩺
 
 ![MedFlow](docs/images/medflow.png)
 
