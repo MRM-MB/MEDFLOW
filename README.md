@@ -1,4 +1,4 @@
-# MedFlow 🩺
+# 🩺 MedFlow: A Privacy-Preserving AI Clinical Assistant
 
 ![MedFlow](docs/images/medflow.png)
 
